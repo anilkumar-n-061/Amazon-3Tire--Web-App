@@ -12,4 +12,5 @@
 <p> 2. IDE or text editor of your choice.</p>
 
 <h3 style= >Amazon 3 Tire Web Application</h3>
+
 ![aws 3 tire app](https://github.com/user-attachments/assets/40202626-720f-4b30-927f-d5f62da4e476)
