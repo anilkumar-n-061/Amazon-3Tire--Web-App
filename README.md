@@ -72,18 +72,24 @@ Now we will be building out the VPC networking components as well as security gr
 #### VPC Creation
 
 1.  Navigate to the VPC dashboard in the AWS console and navigate to <b>Your VPCs</b> on the left hand side.
-2.  Make sure VPC only is selected, and fill out the VPC Settings with a Name tag and a CIDR range of your choice.
+
+![vpc1](https://github.com/user-attachments/assets/c4bc1d9d-b4c9-472e-bc38-adee309231c6)
+   
+3.  Make sure VPC only is selected, and fill out the VPC Settings with a Name tag and a CIDR range of your choice.
 
     <b>NOTE</b>: Make sure you pay attention to the region you’re deploying all your resources in. You’ll want to stay consistent for this workshop.
 
     <b>NOTE</b>: Choose a CIDR range that will allow you to create at least 6 subnets.
     
-![vpc1](https://github.com/user-attachments/assets/c4bc1d9d-b4c9-472e-bc38-adee309231c6)
+![vpc2](https://github.com/user-attachments/assets/44c7b6d4-f0ef-45c6-afaf-cf7ae767cc3c)
 
    
 #### Subnet Creation
 
 1. Next, create your subnets by navigating to Subnets on the left side of the dashboard and clicking Create subnet.
+
+![subnet1](https://github.com/user-attachments/assets/aecb8508-0b47-46e8-9126-0253f954bccd)
+
 2. We will need six subnets across two availability zones. That means that three subnets will be in one availability zone, and three subnets will be in another zone. Each subnet in one availability zone will correspond to one layer of our three tier architecture. Create each of the 6 subnets by specifying the VPC we created in part 1 and then choose a name, availability zone, and appropriate CIDR range for each of the subnets.
 
    <b>NOTE</b>: It may be helpful to have a naming convention that will help you remember what each subnet is for. For example in one AZ you might have the following: Public-Web-Subnet-AZ-1, Private-App-Subnet-AZ-1, Private-DB-Subnet-AZ-1.
@@ -92,30 +98,39 @@ Now we will be building out the VPC networking components as well as security gr
 
    Your final subnet setup should be similar to this. Verify that you have 3 subnets across 2 different availability zones.
 
-   ![subnet1](https://github.com/user-attachments/assets/904e4b74-6584-492b-933c-817de233aed1)
-
+![subnet4](https://github.com/user-attachments/assets/dc7e3f82-0848-4451-ab0f-b47e9586a604)
+ 
 ### Internet Connectivity
 
 #### Internet Gateway
 
+  ![IGW](https://github.com/user-attachments/assets/13856416-5b1c-40f9-9ea2-fb5afe8e1544)
+
 1. In order to give the public subnets in our VPC internet access we will have to create and attach an Internet Gateway. Click on Internet Gateway on the Dashboard.
 
+![IGW1](https://github.com/user-attachments/assets/06211dbf-d887-468f-a65d-6d0e0bdc5725)
+
 2. Create your internet gateway by simply giving it a name and clicking Create internet gateway.
+
+![igw3](https://github.com/user-attachments/assets/5afa592c-06a0-4982-baa3-2d06de7c3dae)
+   
 3. After creating the internet gateway, attach it to your VPC. You have a couple options on how to do this, either with the creation success message or the Actions drop down.
 
-  ![IGW](https://github.com/user-attachments/assets/13856416-5b1c-40f9-9ea2-fb5afe8e1544)
+![igw4](https://github.com/user-attachments/assets/f2bbd6b9-d46c-4370-b48f-9ca625ee451c)
 
 4. Then, select the correct VPC and click Attach internet gateway.
 
 #### NAT Gateway
 
 1. In order for our instances in the app layer private subnet to be able to access the internet they will need to go through a NAT Gateway. For high availability, you’ll deploy one NAT gateway in each of your public subnets. Navigate to NAT Gateways on the left side of the current dashboard and click Create NAT Gateway.
+   
+   ![nat1](https://github.com/user-attachments/assets/8a772e4d-fff5-475f-a710-c12ad2028d72)
 
 2. Fill in the Name, choose one of the public subnets you have created, and then allocate an Elastic IP. Click Create NAT gateway.
 
-   ![NAT](/demos/FillNATGWDetails.png)
+   ![nat3](https://github.com/user-attachments/assets/c75458e7-d6a1-4bfc-957e-440a2efaca6e)
 
-3. Repeat step 1 and 2 for the other subnet.
+4. Repeat step 1 and 2 for the other subnet.
 
 ### Routing Configuration
 
