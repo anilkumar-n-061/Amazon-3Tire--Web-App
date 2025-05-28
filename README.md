@@ -249,25 +249,37 @@ In this section, we will create an EC2 instance for our app layer and make all n
 ### App Instance Deployment
 
 1. Navigate to the EC2 service dashboard and click on Instances on the left hand side. Then, click Launch Instances.
+   
+![ec21](https://github.com/user-attachments/assets/4119a667-4296-41e2-ae29-130ef6c78bcb)
 
-2. Select the first Amazon Linux 2 AMI
+3. Select the first Amazon Linux 2 AMI
 
-3. We'll be using the free tier eligible <b>T.2 micro</b> instance type. Select that and click Next: Configure Instance Details.
-4. When configuring the instance details, make sure to select to correct Network, subnet, and IAM role we created. Note that this is the app layer, so use one of the private subnets we created for this layer.
+![ec22](https://github.com/user-attachments/assets/15f192ce-22e1-4891-ac82-4cb5ad03850f)
 
-   ![](/demos/ConfigureInstanceDetails.png)
+4. We'll be using the free tier eligible <b>T.2 micro</b> instance type. Select that and click Next: Configure Instance Details.
+5. When configuring the instance details, make sure to select to correct Network, subnet, and IAM role we created. Note that this is the app layer, so use one of the private subnets we created for this layer.
 
-5. We'll be keeping the defaults for storage so click next twice. When you get to the tag screen input a Name as a key and call the instance AppLayer. It's a good idea to tag your instances so you can easily keep track of what each instance was created for. Click Next: Configure Security Group.
+  ![ec23](https://github.com/user-attachments/assets/e35ffab1-a0bb-4249-a276-880b2ae0c82a)
 
-   ![](/demos/AddTag.png)
+6. We'll be keeping the defaults for storage so click next twice. When you get to the tag screen input a Name as a key and call the instance AppLayer. It's a good idea to tag your instances so you can easily keep track of what each instance was created for. Click Next: Configure Security Group.
 
-6. Earlier we created a security group for our private app layer instances, so go ahead and select that in this next section. Then click Review and Launch. Ignore the warning about connecting to port 22- we don't need to do that.
-7. When you get to the Review Instance Launch page, review the details you configured and click Launch. You'll see a pop up about creating a key pair. Since we are using Systems Manager Session Manager to connect to the instance, proceed without a keypair. Click Launch.
+![ec24](https://github.com/user-attachments/assets/4aec3737-d630-481e-af54-f0ff9d71ede4)
+
+
+7. Earlier we created a security group for our private app layer instances, so go ahead and select that in this next section. Then click Review and Launch. Ignore the warning about connecting to port 22- we don't need to do that.
+8. When you get to the Review Instance Launch page, review the details you configured and click Launch. You'll see a pop up about creating a key pair. Since we are using Systems Manager Session Manager to connect to the instance, proceed without a keypair. Click Launch.
+
+![ec25](https://github.com/user-attachments/assets/2d720a72-4fd3-4ae1-8133-764efd1e43f1)
+   
    You'll be taken to a page where you can click launch instance, and you'll see the instance you just launched.
+   
 
 ### Connect to Instance
 
 1. Navigate to your list of running EC2 Instances by clicking on Instances on the left hand side of the EC2 dashboard. When the instance state is running, connect to your instance by clicking the checkmark box to the left of the instance, and click the connect button on the top right corner of the dashboard.Select the Session Manager tab, and click connect. This will open a new browser tab for you.
+
+![ec2_app1_conn](https://github.com/user-attachments/assets/e4164daa-ab66-43ac-905d-bac9dfa09dad)
+
 
    <b>NOTE</b>: <i>If you get a message saying that you cannot connect via session manager, then check that your instances can route to your NAT gateways and verify that you gave the necessary permissions on the IAM role for the Ec2 instance. </i>
 
@@ -275,11 +287,15 @@ In this section, we will create an EC2 instance for our app layer and make all n
    ```
    sudo -su ec2-user
    ```
+   
 3. Let’s take this moment to make sure that we are able to reach the internet via our NAT gateways. If your network is configured correctly up till this point, you should be able to ping the google DNS servers:
 
    ```
    ping 8.8.8.8
    ```
+
+![pingwebis](https://github.com/user-attachments/assets/a1ced261-18f6-4abf-9b14-f79bb5e4dfe5)
+
 
    You should see a transmission of packets. Stop it by pressing Cntrl+C
 
@@ -451,7 +467,7 @@ In this section,we will create an Amazon Machine Image (AMI) of the app tier ins
 
 1. Navigate to Instances on the left hand side of the EC2 dashboard. Select the app tier instance we created and under Actions select Image and templates. Click Create Image.
 
-   ![](/demos/CreateAMI1.png)
+   ![backup](https://github.com/user-attachments/assets/36df4534-3545-4238-b11f-794ba5021ec6)
 
 2. Give the image a name and description and then click Create image. This will take a few minutes, but if you want to monitor the status of image creation you can see it by clicking AMIs under Images on the left hand navigation panel of the EC2 dashboard.
 
