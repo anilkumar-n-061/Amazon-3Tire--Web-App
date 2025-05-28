@@ -16,7 +16,7 @@ It is intended for those who have a technical role. The assumption is that you h
 
 ## Architecture Overview
 
-![Architecture Diagram](/demos/3TierArch.png)
+![aws3tierarchi](https://github.com/user-attachments/assets/01a3be13-790f-4d62-b485-587c38e95313)
 
 In this architecture, a public-facing Application Load Balancer forwards client traffic to our web tier EC2 instances. The web tier is running Nginx webservers that are configured to serve a React.js website and redirects our API calls to the application tier’s internal facing load balancer. The internal facing load balancer then forwards that traffic to the application tier, which is written in Node.js. The application tier manipulates data in an Aurora MySQL multi-AZ database and returns it to our web tier. Load balancing, health checks and autoscaling groups are created at each layer to maintain the availability of this architecture.
 
@@ -136,50 +136,56 @@ Now we will be building out the VPC networking components as well as security gr
 
 1. Navigate to Route Tables on the left side of the VPC dashboard and click Create route table First, let’s create one route table for the web layer public subnets and name it accordingly.
 
-   ![](/demos/CreatePublicRT.png)
+  ![rt](https://github.com/user-attachments/assets/08bccfbc-6026-4a59-b4d0-b938008c941a)
+
 
 2. After creating the route table, you'll automatically be taken to the details page. Scroll down and click on the Routes tab and Edit routes.
 
-   ![](/demos/EditRoutes.png)
+  ![rt2](https://github.com/user-attachments/assets/920236d2-59b3-4068-9e1e-928d9d212df3)
 
 3. Add a route that directs traffic from the VPC to the internet gateway. In other words, for all traffic destined for IPs outside the VPC CDIR range, add an entry that directs it to the internet gateway as a target. Save the changes.
 
-   ![](/demos/AddIGWRoute.png)
+  ![prt3](https://github.com/user-attachments/assets/fe9e4a5c-f3db-42b2-ba92-20e2e84aca00)
 
 4. Edit the Explicit Subnet Associations of the route table by navigating to the route table details again. Select Subnet Associations and click Edit subnet associations.
 
-   ![](/demos/EditSubnetAssociations.png)
+   ![prt-subass](https://github.com/user-attachments/assets/1d08e233-3c46-4e3f-a6ed-eb06c5e8c097)
 
    Select the two web layer public subnets you created eariler and click Save associations.
 
-   ![](/demos/AssociatePublicSubnets.png)
+   ![psuRT](https://github.com/user-attachments/assets/f8c61250-d6ea-4061-85ca-154fad750e1a)
 
 5. Now create 2 more route tables, one for each app layer private subnet in each availability zone. These route tables will route app layer traffic destined for outside the VPC to the NAT gateway in the respective availability zone, so add the appropriate routes for that.
 
-   ![](/demos/PrivateSubnetRT1.png)
-
    Once the route tables are created and routes added, add the appropriate subnet associations for each of the app layer private subnets.
 
-   ![](/demos/PrivateSubnetAssociation.png)
+  ![prt1](https://github.com/user-attachments/assets/ae2c798e-2d7d-407b-ab41-7cc51866be9d)
 
 ### Security Groups
 
 1. Security groups will tighten the rules around which traffic will be allowed to our Elastic Load Balancers and EC2 instances. Navigate to Security Groups on the left side of the VPC dashboard, under Security.
-
+ 
+ ![se1](https://github.com/user-attachments/assets/b32d5afd-9b38-463f-a576-c9aaca0154d4)
+ 
 2. The first security group you’ll create is for the public, internet facing load balancer. After typing a name and description, add an inbound rule to allow HTTP type traffic for your IP.
 
-   ![](/demos/ExternalLBSG.png)
+ ![seq2](https://github.com/user-attachments/assets/025c5d83-7fec-413f-836a-07ac8c0e199a)  
 
 3. The second security group you’ll create is for the public instances in the web tier. After typing a name and description, add an inbound rule that allows HTTP type traffic from your internet facing load balancer security group you created in the previous step. This will allow traffic from your public facing load balancer to hit your instances. Then, add an additional rule that will allow HTTP type traffic for your IP. This will allow you to access your instance when we test.
 
-   ![](/demos/WebTierSG.png)
+![seq3](https://github.com/user-attachments/assets/6b44ceac-8b0e-4404-8b1c-004b642f517f)   
 
 4. The third security group will be for our internal load balancer. Create this new security group and add an inbound rule that allows HTTP type traffic from your public instance security group. This will allow traffic from your web tier instances to hit your internal load balancer.
-   ![](/demos/InternalLBSG.png)
+
+![seq4](https://github.com/user-attachments/assets/a282110c-74c7-45ed-a726-d246f38f5134)
+
 5. The fourth security group we’ll configure is for our private instances. After typing a name and description, add an inbound rule that will allow TCP type traffic on port 4000 from the internal load balancer security group you created in the previous step. This is the port our app tier application is running on and allows our internal load balancer to forward traffic on this port to our private instances. You should also add another route for port 4000 that allows your IP for testing.
-   ![](/demos/PrivateInstanceSG.png)
-6. The fifth security group we’ll configure protects our private database instances. For this security group, add an inbound rule that will allow traffic from the private instance security group to the MYSQL/Aurora port (3306).
-   ![](/demos/DBSG.png)
+
+![secpri](https://github.com/user-attachments/assets/9cba9aeb-9947-4e30-94f3-28e1065e68f5)
+
+7. The fifth security group we’ll configure protects our private database instances. For this security group, add an inbound rule that will allow traffic from the private instance security group to the MYSQL/Aurora port (3306).
+ 
+ ![privsg](https://github.com/user-attachments/assets/0e0f1d88-4613-4de1-8f0c-a06203b048c9)
 
 ## Database Deployment - Part 2
 
@@ -191,9 +197,14 @@ Now we will be building out the VPC networking components as well as security gr
 
 1. Navigate to the RDS dashboard in the AWS console and click on Subnet groups on the left hand side. Click Create DB subnet group.
 2. Give your subnet group a name, description, and choose the VPC we created.
-   ![](/demos/FillSubnetGroupDetails1.png)
+
+![rds1](https://github.com/user-attachments/assets/37a8b520-6817-4a77-8993-6243bf1169c7)
+
+![db grp](https://github.com/user-attachments/assets/49d55d5a-c495-4aac-b8b0-d387563beb38)
+
 3. When adding subnets, make sure to add the subnets we created in each availability zone specificaly for our database layer. You may have to navigate back to the VPC dashboard and check to make sure you're selecting the correct subnet IDs.
-   ![](/demos/FillSubnetGroupDetails2.png)
+
+  ![db grp1](https://github.com/user-attachments/assets/5d4b1b6f-ad62-4a73-9845-05adeb576914)
 
 ### Multi-AZ Database Deployment
 
@@ -201,23 +212,30 @@ Now we will be building out the VPC networking components as well as security gr
 
 2. We'll now go through several configuration steps. Start with a Standard create for this MySQL-Compatible Amazon Aurora database. Leave the rest of the defaults in the Engine options as default.
 
-   ![](/demos/DBConfig1.png)
+![db1](https://github.com/user-attachments/assets/e2d8ea7b-c8d4-44f5-8c98-c789f7c88c43)
+
+![db2](https://github.com/user-attachments/assets/5de2bda2-c6cd-4490-8770-d54c2abb6956)
+
 
    Under the Templates section choose Dev/Test since this isn't being used for production at the moment. Under Settings set a username and password of your choice and note them down since we'll be using password authentication to access our database.
 
-   ![](/demos/DBConfig2.png)
+  ![db3](https://github.com/user-attachments/assets/7af7b17e-29a7-4329-af43-660745523d01)
 
    Next, under Availability and durability change the option to create an Aurora Replica or reader node in a different availability zone. Under Connectivity, set the VPC, choose the subnet group we created earlier, and select no for public access.
 
-   ![](/demos/DBConfig3.png)
+   ![db4](https://github.com/user-attachments/assets/8e330c7e-f39b-4b04-bbc8-f4c830f8f100)
 
    Set the security group we created for the database layer, make sure password authentication is selected as our authentication choice, and create the database.
 
-   ![](/demos/DBConfig4.png)
+![db5](https://github.com/user-attachments/assets/b65d038b-f50c-417d-b4dc-4d0262cb7779)
+
+![db6](https://github.com/user-attachments/assets/1be51d1e-7a6a-468f-969c-46a35a1f730c)
 
 3. When your database is provisioned, you should see a reader and writer instance in the database subnets of each availability zone. Note down the writer endpoint for your database for later use.
-   ![](/demos/DBEndpoint.png)
+   
+![db7](https://github.com/user-attachments/assets/c863ef81-1ec4-4de8-9b52-61514419e51d)
 
+  
 ## App Tier Instance Deployment - Part 3
 
 In this section, we will create an EC2 instance for our app layer and make all necessary software configurations so that the app can run. The app layer consists of a Node.js application that will run on port 4000. We will also configure our database with some data and tables.
