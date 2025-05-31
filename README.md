@@ -491,15 +491,19 @@ In this section,we will create an Amazon Machine Image (AMI) of the app tier ins
 
 3. After giving the load balancer a name, be sure to select <b>internal</b> since this one will not be public facing, but rather it will route traffic from our web tier to the app tier.
 
-   ![](/demos/LBConfig1.png)
+  ![launchtemp](https://github.com/user-attachments/assets/a7cae101-3f4d-4f65-a7d3-1febd345ca49)
+
 
    Select the correct network configuration for VPC and private subnets.
 
-   ![](/demos/LBConfig2.png)
+
+![app-tier-lb1](https://github.com/user-attachments/assets/cd508e4f-cbff-49e6-b996-b23641927831)
+
 
    Select the security group we created for this internal ALB. Now, this ALB will be listening for HTTP traffic on port 80. It will be forwarding the traffic to our <b>target group </b>that we just created, so select it from the dropdown, and create the load balancer.
 
-   ![](/demos/LBConfig3.png)<image>
+
+   ![app-tier-lb2](https://github.com/user-attachments/assets/6dc7138e-a962-49b1-89c5-b7c243919f2d)
 
 ### Launch Template
 
@@ -507,8 +511,9 @@ In this section,we will create an Amazon Machine Image (AMI) of the app tier ins
 
 2. Name the Launch Template, and then under <b>Application and OS Images</b> include the app tier AMI you created.
 
-   ![](/demos/LaunchTemplateConfig1.png)
+   ![launchtemp](https://github.com/user-attachments/assets/6fdb42e6-4fdc-477b-884b-e9b95a01ef68)
 
+ 
    Under Instance Type select t2.micro. For Key pair and Network Settings don't include it in the template. We don't need a key pair to access our instances and we'll be setting the network information in the autoscaling group.
 
    ![](/demos/LaunchTemplateConfig2.png)
