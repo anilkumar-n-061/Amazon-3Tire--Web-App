@@ -1,4 +1,4 @@
-# AWS Three Tier Web Architecture
+![webtier1](https://github.com/user-attachments/assets/ec020ca3-583c-47ab-866a-e5a08781cfdb)# AWS Three Tier Web Architecture
 
 ## Description:
 
@@ -511,35 +511,46 @@ In this section,we will create an Amazon Machine Image (AMI) of the app tier ins
 
 2. Name the Launch Template, and then under <b>Application and OS Images</b> include the app tier AMI you created.
 
-   ![launchtemp](https://github.com/user-attachments/assets/6fdb42e6-4fdc-477b-884b-e9b95a01ef68)
+  ![launchtemp](https://github.com/user-attachments/assets/cc3ce33d-a07f-4033-a9a2-72071b2b393b)
 
- 
+
    Under Instance Type select t2.micro. For Key pair and Network Settings don't include it in the template. We don't need a key pair to access our instances and we'll be setting the network information in the autoscaling group.
+   
+   ![launchtemp1](https://github.com/user-attachments/assets/e80bc67b-318f-43d8-a31e-211292849f1f)
 
-   ![](/demos/LaunchTemplateConfig2.png)
 
    Set the correct security group for our app tier, and then under Advanced details use the same IAM instance profile we have been using for our EC2 instances.
 
-   ![](/demos/LaunchTemplateConfig3.png)
+   ![launchtemp2](https://github.com/user-attachments/assets/9e185bba-684a-4fe3-97ea-abce1182da4b)
+   
+   ![launchtemp3](https://github.com/user-attachments/assets/db318f7a-b235-4e51-96ef-21315e172a7a)
 
-   ![](/demos/LaunchTemplateConfig4.png)
+   ![launchtemp4](https://github.com/user-attachments/assets/a134767a-7680-452f-87d6-89f63a16165a)
+
 
 ### Auto Scaling
 
 1. We will now create the Auto Scaling Group for our app instances. On the left side of the EC2 dashboard navigate to <b>Auto Scaling Groups</b> under Auto Scaling and click <b>Create Auto Scaling group.</b>
 
 2. Give your Auto Scaling group a name, and then select the Launch Template we just created and click next.
-   ![](/demos/ConfigureASG1.png)
+ 
+ ![autoscalegrp](https://github.com/user-attachments/assets/0831cab7-9c01-4d94-96f7-848477bd0597)
+
 
 3. On the <b>Choose instance launch</b> options page set your VPC, and the private instance subnets for the app tier and continue to step 3.
 
-   ![](/demos/ConfigureASG2.png)
+  ![autoscalegrp1](https://github.com/user-attachments/assets/c9f56b5d-5c2e-43fb-bfc8-20b20a3ceab5)
 
 4. For this next step, attach this Auto Scaling Group to the Load Balancer we just created by selecting the existing load balancer's target group from the dropdown. Then, click next.
 
-   ![](/demos/ConfigureASG3.png)
+![autoscalegrp2](https://github.com/user-attachments/assets/6a7b298d-8dae-4e74-9961-9268ff7da99e)
+
 
 5. For Configure group size and scaling policies, set desired, minimum and maximum capacity to 2. Click skip to review and then Create Auto Scaling Group.
+
+
+![autoscalegrp3](https://github.com/user-attachments/assets/c5cfd86b-3497-47ec-868d-3c0b1e32f18e)
+
 
    You should now have your internal load balancer and autoscaling group configured correctly. You should see the autoscaling group spinning up 2 new app tier instances. If you wanted to test if this is working correctly, you can delete one of your new instances manually and wait to see if a new instance is booted up to replace it.
 
@@ -558,7 +569,8 @@ In this section we will deploy an EC2 instance for the web tier and make all nec
 
 Before we create and configure the web instances, open up the **application-code/nginx.conf** file from the repo we downloaded. Scroll down to **line 58** and replace `[INTERNAL-LOADBALANCER-DNS]` with your internal load balancer’s DNS entry. You can find this by navigating to your internal load balancer's details page.
 
-![](/demos/ReplaceCode.png)
+![nginx_DNS_Change](https://github.com/user-attachments/assets/6d0b8261-a79f-46c9-a2da-e1ea060581c1)
+
 
 Then, upload this file and the **application-code/web-tier** folder to the s3 bucket you created for this project.
 
@@ -566,9 +578,14 @@ Then, upload this file and the **application-code/web-tier** folder to the s3 bu
 
 1. Follow the same instance creation instructions we used for the App Tier instance in **Part 3: App Tier Instance Deployment**, with the exception of the subnet. We will be provisioning this instance in one of our **public subnets**. Make sure to select the correct network components, security group, and IAM role. **This time, auto-assign a public ip** on the **Configure Instance Details page**. Remember to tag the instance with a name so we can identify it more easily.
 
-   ![](/demos/WebInstanceCreate1.png)
+![webtier1](https://github.com/user-attachments/assets/8377f1d3-cc69-4fd8-b204-65f094c9c69b)
 
-   ![](/demos/WebInstanceCreate2.png)
+![webtier3](https://github.com/user-attachments/assets/a7c536e1-3d86-4f86-bb87-f187c97156ab)
+
+![webtier4](https://github.com/user-attachments/assets/aa2a20e7-02d9-465b-9b5f-645284256679)
+
+![webtier2](https://github.com/user-attachments/assets/30dbd66b-6848-4f25-8e62-7c51a86a3a53)
+
 
    Then at the end, proceed without a key pair for this instance.
 
@@ -647,9 +664,11 @@ Then, upload this file and the **application-code/web-tier** folder to the s3 bu
 
 5. Now when you plug in the public IP of your web tier instance, you should see your website, which you can find on the Instance details page on the EC2 dashboard. If you have the database connected and working correctly, then you will also see the database working. You’ll be able to add data. Careful with the delete button, that will clear all the entries in your database.
 
-   ![](/demos/WebPage1.png)
 
-   ![](/demos/WebPage2.png)
+    ![WebPage1](https://github.com/user-attachments/assets/72429357-7f6d-4f8d-8436-d08328031ed3)
+
+    ![WebPage2](https://github.com/user-attachments/assets/6ae2f91a-92f3-4656-a449-9f5bcaacb1b7)
+
 
 ## External Load Balancer and Auto Scaling - Part 6
 
