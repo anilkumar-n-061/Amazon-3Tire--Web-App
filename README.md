@@ -1,4 +1,4 @@
-![webtier1](https://github.com/user-attachments/assets/ec020ca3-583c-47ab-866a-e5a08781cfdb)# AWS Three Tier Web Architecture
+# AWS Three Tier Web Architecture
 
 ## Description:
 
